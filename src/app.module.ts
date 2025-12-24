@@ -20,7 +20,7 @@ import { LeaderboardsModule } from './leaderboards/leaderboards.module';
       password: process.env.DATABASE_PASSWORD || 'fabrotec_pass',
       database: process.env.DATABASE_NAME || 'fabrotec_db',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true,
+      synchronize: process.env.NODE_ENV !== 'production', // Auto-sync in dev only
       logging: process.env.NODE_ENV === 'development',
     }),
     ThrottlerModule.forRoot([{

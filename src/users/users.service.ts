@@ -22,14 +22,18 @@ export class UsersService {
       password: hashedPassword,
     });
 
-    return this.userRepository.save(user);
+    const savedUser = await this.userRepository.save(user);
+    
+    // Remove password from response
+    const { password, ...userWithoutPassword } = savedUser;
+    return userWithoutPassword as User;
   }
 
   async findAll(): Promise<User[]> {
     return this.userRepository.find();
   }
 
-  async findOne(id: string): Promise<User> {
+  async findOne(id: number): Promise<User> {
     const user = await this.userRepository.findOne({ where: { id } });
     
     if (!user) {
@@ -39,7 +43,7 @@ export class UsersService {
     return user;
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
+  async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
     const user = await this.findOne(id);
 
     if (updateUserDto.password) {
@@ -50,7 +54,7 @@ export class UsersService {
     return this.userRepository.save(user);
   }
 
-  async remove(id: string): Promise<void> {
+  async remove(id: number): Promise<void> {
     const user = await this.findOne(id);
     await this.userRepository.remove(user);
   }

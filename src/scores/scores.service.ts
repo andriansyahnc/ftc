@@ -11,12 +11,20 @@ export class ScoresService {
     private readonly scoreRepository: Repository<Score>,
   ) {}
 
-  async create(createScoreDto: CreateScoreDto, userId: string): Promise<Score> {
+  async create(createScoreDto: CreateScoreDto, userId: number): Promise<Score> {
     const score = this.scoreRepository.create({
       ...createScoreDto,
       userId,
     });
 
     return this.scoreRepository.save(score);
+  }
+
+  async getTopScores(limit: number = 10) {
+    return this.scoreRepository.find({
+      relations: ['user'],
+      order: { value: 'DESC' },
+      take: limit,
+    });
   }
 }

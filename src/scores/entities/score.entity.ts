@@ -3,17 +3,14 @@ import { User } from '../../users/entities/user.entity';
 
 @Entity('scores')
 export class Score {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn('increment')
+  id: number;
 
   @Column('decimal', { precision: 10, scale: 2 })
   value: number;
 
-  @Column({ nullable: true })
-  description: string;
-
   @Column()
-  userId: string;
+  userId: number;
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'userId' })

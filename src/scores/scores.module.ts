@@ -8,5 +8,6 @@ import { Score } from './entities/score.entity';
   imports: [TypeOrmModule.forFeature([Score])],
   controllers: [ScoresController],
   providers: [ScoresService],
+  exports: [ScoresService]
 })
 export class ScoresModule {}
