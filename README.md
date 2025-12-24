@@ -1,4 +1,4 @@
-# Fabrotec Test - Mobile Game Leaderboard API
+# Mobile Game Leaderboard API
 
 A RESTful API for a mobile game that allows players to submit their high scores and view the leaderboard.
 
