@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: fabrotec-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: fabrotec_db
+      MYSQL_USER: fabrotec_user
+      MYSQL_PASSWORD: fabrotec_pass
+    ports:
+      - '3306:3306'
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - fabrotec-network
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost', '-u', 'root', '-proot_password']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fabrotec-app
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DATABASE_HOST: mysql
+      DATABASE_PORT: 3306
+      DATABASE_USER: fabrotec_user
+      DATABASE_PASSWORD: fabrotec_pass
+      DATABASE_NAME: fabrotec_db
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - fabrotec-network
+    volumes:
+      - ./src:/app/src
+      - /app/node_modules
+
+networks:
+  fabrotec-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
